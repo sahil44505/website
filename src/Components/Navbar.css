@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.navbar {
+    width: 100%;
+    height: 80px;
+    background-color: rgb(19, 19, 19);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+.Links , .Roam{
+    margin-right: 50px;
+    display: flex;
+    align-items: center;
+  }
+  
+.Links a,.Roam a{
+    text-decoration: none;
+    color: white;
+    margin-left: 20px;
+    font-size: 25px;
+  }
+
+.Roam{
+  
+  gap: 50px;
+  padding: 12px;
+  margin-left: 38px;
+}
