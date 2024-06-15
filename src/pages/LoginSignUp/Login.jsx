@@ -56,6 +56,7 @@ const Login = () => {
 
       console.log(res.token);  // Log the token
       localStorage.setItem('token', res.token);  // Store the token
+      localStorage.setItem('userId', res.userId);
 
       navigate("/");
       

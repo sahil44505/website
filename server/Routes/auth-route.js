@@ -4,8 +4,35 @@ const User = require("../models/User");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 var nodemailer = require('nodemailer');
+require('dotenv').config();
+
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
+router.post('/add-to-cart', async (req, res) => {
+    console.log(req.body)
+    if (!ObjectId.isValid(req.body._itemId)) {
+        return res.status(400).send({ code: 400, message: "Invalid item ID format" });
+    }
+    if (!req.body._itemId || !req.body.userId) {
+        return res.status(400).send({ code: 400, message: "Item ID and User ID are required" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(req.body._itemId)) {
+        return res.status(400).send({ code: 400, message: "Invalid item ID format" });
+    }
+   
+    const isupdate = await User.updateOne({ _id : req.body.userId},
+        { $addToSet : {  Cart: new ObjectId(req.body._itemId)}})
+    if (!isupdate){
+        return res.send({ code : 500 ,message:"Server err"})
+        
+    }else{
+        return res.send({ code : 200 ,message:"Add to cart success"})
+       
+
+    }
 
 
+    });
 router.post('/SignUp', async (req, res) => {
 
 
@@ -30,21 +57,29 @@ router.post('/SignUp', async (req, res) => {
 
 });
 router.post("/Login", async (req, res) => {
+   
+  
 
     const { Name, email, password } = req.body;
 
     const userExist = await User.findOne({ email }).select('+password');
+
     if (!userExist) {
         return res.status(401).json({ status: false, msg: "Unable to Login" })
 
     }
+
     const validPassword = await bcrypt.compare(req.body.password, userExist.password);
     if (!validPassword) {
         return res.status(401).json({ msg: "Password incorrect" })
     }
-    const token = jwt.sign({ Name: userExist.Name }, process.env.KEY, { expiresIn: '1h' })
+    const token = jwt.sign({ userId: userExist._id }, process.env.KEY, { expiresIn: '1h' })
+   
+   
+    
     res.cookie('token', token, { httpOnly: true, maxAge: 360000 })
-    return res.status(200).json({ msg: " Login SuccessFull ",token: token })
+  
+    return res.status(200).json({ msg: " Login SuccessFull ",token: token , userId : userExist._id  })
 
 })
 router.post("/ForgotPassword", async (req, res) => {

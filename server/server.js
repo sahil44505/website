@@ -10,6 +10,7 @@ const contactRouter = require("./Routes/contact");
 const connectDb = require('./utils/db');
 const cookieParser = require('cookie-parser');
 
+
 const dotenv = require('dotenv');
 dotenv.config();
 const corsOptions = {
@@ -21,6 +22,9 @@ app.use(cors(corsOptions));
 app.use(cookieParser())
 
 app.use(bodyParser.json());
+
+
+
 
 app.use('/api',authRouter);
 app.use('/api',contactRouter);
